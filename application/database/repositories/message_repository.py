@@ -48,7 +48,7 @@ class MessageRepository(BaseDbRepository[Message, UpdateMessage, MessageORM]):
             update(MessageORM)
             .values(
                 status=MessageStatus.in_work.value,
-                taken_to_work_at=datetime.utcnow()
+                taken_to_work_at=datetime.utcnow(),
             )
             .where(MessageORM.id.in_([x.id for x in messages]))
         )
