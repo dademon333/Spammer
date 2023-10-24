@@ -1,0 +1,56 @@
+default_stages:
+  - commit
+
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: venv/bin/black -l 79 -t py312 .
+        language: script
+        types: [ python ]
+        pass_filenames: false
+      - id: autoflake
+        name: autoflake
+        entry: autoflake
+        language: system
+        types: [ python ]
+        args: [ --in-place, --remove-all-unused-imports, --remove-duplicate-keys ]
+      - id: flakes
+        name: flakes
+        entry: venv/bin/flake8
+        language: script
+        stages:
+          - commit
+          - push
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+
+  # Раскомментить, когда в mypy появится поддержка 3.12
+#  - repo: https://github.com/pre-commit/mirrors-mypy
+#    rev: v1.6.1
+#    hooks:
+#      - id: mypy
+#        entry: mypy .
+#        pass_filenames: false
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-docstring-first
+        stages:
+          - commit
+          - push
+      - id: check-merge-conflict
+        stages:
+          - push
+      - id: trailing-whitespace
+        stages:
+          - commit
+          - push
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: \.svg$

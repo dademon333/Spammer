@@ -1,0 +1,32 @@
+# core
+fastapi-jsonrpc==2.5.0
+fastapi==0.99.0
+pydantic==1.10.12
+
+# database
+alembic==1.11.3
+asyncpg==0.28.0
+SQLAlchemy==2.0.20
+
+# tests
+aioresponses==0.7.4
+httpx==0.24.1
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-xdist==3.3.1
+pytest==7.4.0
+
+# code style
+autoflake==2.2.0
+black==23.7.0
+flake8==6.1.0
+mypy-extensions==1.0.0
+mypy==1.6.1
+
+aiohttp==3.9.0b0
+pre-commit==3.5.0
+pytz==2023.3
+starlette==0.27.0
+urllib3==2.0.4
+uvicorn==0.23.2
+yarl==1.9.2
