@@ -47,10 +47,10 @@ class BaseDbRepository[
         return [self._model.from_orm(x) for x in result.all()]
 
     async def create(self, model: Model) -> Model:
-        model_dict = model.dict(exclude_unset=True)
-        model_dict["id"] = model.id
         result = await self.db_session.scalars(
-            insert(self._table).values(model_dict).returning(self._table)
+            insert(self._table)
+            .values(model.dict(exclude_unset=True))
+            .returning(self._table)
         )
         return self._model.from_orm(result.one())
 
@@ -58,14 +58,10 @@ class BaseDbRepository[
         if not models:
             return []
 
-        model_dicts = []
-        for model in models:
-            model_dict = model.dict(exclude_unset=True)
-            model_dict["id"] = model.id
-            model_dicts.append(model_dict)
-
         result = await self.db_session.scalars(
-            insert(self._table).values(model_dicts).returning(self._table)
+            insert(self._table)
+            .values([model.dict(exclude_unset=True) for model in models])
+            .returning(self._table)
         )
         return [self._model.from_orm(x) for x in result.all()]
 
