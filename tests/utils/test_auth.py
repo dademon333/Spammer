@@ -47,6 +47,6 @@ async def test_get_auth_token_success(service_token: ServiceToken):
     mock.get_by_token = AsyncMock(return_value=service_token)
 
     result = await get_auth_token(
-        auth_token="some_unknown_token", service_token_repository=mock
+        auth_token="some_known_token", service_token_repository=mock
     )
     assert result == service_token
