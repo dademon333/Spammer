@@ -7,7 +7,7 @@ from application.database.connection import create_connection
 from application.database.orm_models import Base
 from alembic import context
 
-from config import POSTGRESQL_URL
+from application.config import POSTGRESQL_URL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

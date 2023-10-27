@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from application.database.connection import async_engine, async_session
 from application.database.orm_models import Base
-from config import (
+from application.config import (
     POSTGRESQL_DATABASE,
     POSTGRESQL_PASSWORD,
     POSTGRESQL_HOST,

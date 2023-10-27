@@ -21,3 +21,8 @@ async def service_token_in_db(
 ) -> ServiceToken:
     await service_token_repository.create(service_token)
     return service_token
+
+
+@pytest.fixture()
+def auth_token(service_token_in_db: ServiceToken) -> str:
+    return f"Bearer {service_token_in_db.token}"

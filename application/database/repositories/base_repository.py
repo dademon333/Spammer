@@ -30,13 +30,13 @@ class BaseDbRepository[
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
-    async def get_by_id(self, entry_id: str) -> Model | None:
+    async def get_by_id(self, entry_id: int) -> Model | None:
         row = await self.db_session.get(self._table, entry_id)
         if not row:
             return None
         return self._model.from_orm(row)
 
-    async def get_by_ids(self, ids: list[str]) -> list[Model]:
+    async def get_by_ids(self, ids: list[int]) -> list[Model]:
         if not ids:
             return []
         result = await self.db_session.scalars(

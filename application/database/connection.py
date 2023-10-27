@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 
-from config import IS_DEBUG, POSTGRESQL_URL
+from application.config import IS_DEBUG, POSTGRESQL_URL
 
 logger = logging.getLogger(__name__)
 

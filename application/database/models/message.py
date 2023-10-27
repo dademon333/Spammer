@@ -1,6 +1,8 @@
 from datetime import datetime
 from enum import StrEnum
 
+from pydantic import Field
+
 from application.database.models.base import ModelBase, UpdateModelBase
 
 
@@ -11,7 +13,8 @@ class MessageType(StrEnum):
 
 
 class MessagePlatform(StrEnum):
-    notification = "notification"
+    ios_notification = "ios_notification"
+    android_notification = "android_notification"
     email = "email"
     sms = "sms"
     whatsapp = "whatsapp"
@@ -25,14 +28,15 @@ class MessageStatus(StrEnum):
 
 
 class Message(ModelBase):
-    id: int
     text: str
     address: str
-    status: MessageStatus
+    status: MessageStatus = MessageStatus.new
     type: MessageType
     platform: MessagePlatform
     scheduled_at: datetime | None  # Во сколько нужно отправить сообщение
-    created_at: datetime  # Когда создали сообщение
+    created_at: datetime = Field(  # Когда создали сообщение
+        default_factory=lambda: datetime.utcnow()
+    )
     taken_to_work_at: datetime | None  # Когда сообщение взято в работу
 
 

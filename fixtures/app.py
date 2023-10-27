@@ -6,7 +6,7 @@ from typing import Generator, Callable, Any
 import pytest
 from aioresponses import aioresponses
 from fastapi import FastAPI
-from httpx import AsyncClient
+from httpx import AsyncClient, ByteStream
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -26,6 +26,29 @@ def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def override_httpx_content_encode_json():
+    """Небольшой костыль, который фиксит ошибку
+    "Object of type datetime is not JSON serializable"
+    в тестах, которая возникает где-то под капотом async_client.post()
+    за счет использования `default=str` аргумента метода `json.dumps`
+    """
+    from json import dumps as json_dumps
+    from httpx import _content as module_override
+
+    def wrap(json):
+        body = json_dumps(json, default=str).encode("utf-8")
+        content_length = str(len(body))
+        content_type = "application/json"
+        headers = {
+            "Content-Length": content_length,
+            "Content-Type": content_type,
+        }
+        return headers, ByteStream(body)
+
+    module_override.encode_json = wrap
 
 
 @pytest.fixture()
