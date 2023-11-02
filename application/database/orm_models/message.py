@@ -14,7 +14,7 @@ class MessageORM(Base):
     status = Column(VARCHAR, nullable=False, index=True, default="new")
     type = Column(VARCHAR, nullable=False)
     platform = Column(VARCHAR, nullable=False)
-    scheduled_at = Column(DateTime(timezone=True), nullable=True)
+    access_token = Column(VARCHAR, nullable=True)
     created_at = Column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )

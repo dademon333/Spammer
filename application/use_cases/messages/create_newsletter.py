@@ -34,7 +34,7 @@ class CreateNewsletterUseCase:
                 address=message.address,
                 type=MessageType.newsletter,
                 platform=input_dto.platform,
-                scheduled_at=input_dto.scheduled_at,
+                access_token=message.access_token,
             )
             for message in input_dto.messages
         ]

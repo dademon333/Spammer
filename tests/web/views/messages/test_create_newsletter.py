@@ -41,7 +41,6 @@ async def test_success(
 
     assert len(messages_in_db) == 2
     assert all(x.platform == MessagePlatform.email for x in messages_in_db)
-    assert all(x.scheduled_at is None for x in messages_in_db)
     assert set(x.address for x in messages_in_db) == {
         "foo@mail.ru",
         "bar@mail.ru",

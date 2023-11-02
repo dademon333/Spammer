@@ -32,7 +32,7 @@ class CreateMessageUseCase:
         )
 
         message = await self.message_repository.create(
-            Message.parse_obj(input_dto.dict())
+            Message.parse_obj(input_dto)
         )
         logger.info(f"Создали сообщение с id {message.id}")
         return CreateMessageOutputDTO(id=message.id)

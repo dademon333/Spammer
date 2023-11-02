@@ -26,7 +26,7 @@ def upgrade() -> None:
         sa.Column("status", sa.VARCHAR(), nullable=False),
         sa.Column("type", sa.VARCHAR(), nullable=False),
         sa.Column("platform", sa.VARCHAR(), nullable=False),
-        sa.Column("scheduled_at", sa.DateTime(timezone=True), nullable=True),
+        sa.Column("access_token", sa.VARCHAR(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column(
             "taken_to_work_at", sa.DateTime(timezone=True), nullable=True
