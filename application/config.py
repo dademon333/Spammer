@@ -44,3 +44,5 @@ POSTGRESQL_URL = create_connection_url(
 
 SMSC_LOGIN = os.getenv("SMSC_LOGIN")
 SMSC_PASSWORD = os.getenv("SMSC_PASSWORD")
+
+WAPICO_ACCESS_TOKEN = os.getenv("WAPICO_ACCESS_TOKEN")
