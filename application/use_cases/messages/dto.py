@@ -27,7 +27,10 @@ class CreateMessageInputDTO(BaseModel):
         ..., description="Куда отправить сообщение"
     )
     access_token: str | None = Field(
-        None, description="Токен для отправки сообщения (если требуется)"
+        None,
+        description=(
+            "Токен клиента Firebase/Instance ID Wapico для отправки сообщения"
+        ),
     )
 
 
@@ -44,7 +47,10 @@ class CreateNewsletterMessageInputDTO(BaseModel):
         ),
     )
     access_token: str | None = Field(
-        None, description="Токен для отправки сообщения (если требуется)"
+        None,
+        description=(
+            "Токен клиента Firebase/Instance ID Wapico для отправки сообщения"
+        ),
     )
 
 

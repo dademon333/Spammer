@@ -41,3 +41,6 @@ POSTGRESQL_URL = create_connection_url(
     db_password=POSTGRESQL_PASSWORD,
     db_database=POSTGRESQL_DATABASE,
 )
+
+SMSC_LOGIN = os.getenv("SMSC_LOGIN")
+SMSC_PASSWORD = os.getenv("SMSC_PASSWORD")
