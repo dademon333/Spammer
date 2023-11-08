@@ -13,15 +13,15 @@ from fastapi.dependencies.utils import (
 from starlette.concurrency import run_in_threadpool
 
 
-class DependencySolver[T]:
+class DependencyInjector[T]:
     """FastAPI add-on over solve_dependencies,
     which can be used outside request scope.
 
     Example usage:
     ```
-    async with DependencySolver() as solver:
-        foo_use_case = await solver.solve(get_foo_use_case)
-        bar_repository = await solver.solve(get_bar_repository)
+    async with DependencyInjector() as injector:
+        foo_use_case = await injector.solve(get_foo_use_case)
+        bar_repository = await injector.solve(get_bar_repository)
         await use_case.execute(...)
     # commits and closes db connection/etc
     some_next_login()

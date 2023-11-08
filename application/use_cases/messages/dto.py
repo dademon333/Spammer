@@ -13,6 +13,7 @@ class CreateMessageInputDTO(BaseModel):
             "Куда отправить сообщение: email адрес/номера телефона/etc"
         ),
     )
+    subject: str | None = Field(None, description="Тема сообщения (для email)")
     type: MessageType = Field(
         ...,
         description=dedent(
@@ -46,6 +47,7 @@ class CreateNewsletterMessageInputDTO(BaseModel):
             "Куда отправить сообщение: email адрес/номера телефона/etc"
         ),
     )
+    subject: str | None = Field(None, description="Тема сообщения (для email)")
     access_token: str | None = Field(
         None,
         description=(

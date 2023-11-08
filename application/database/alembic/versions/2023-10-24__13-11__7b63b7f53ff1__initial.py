@@ -23,6 +23,7 @@ def upgrade() -> None:
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column("text", sa.Text(), nullable=False),
         sa.Column("address", sa.VARCHAR(), nullable=False),
+        sa.Column("subject", sa.VARCHAR(), nullable=True),
         sa.Column("status", sa.VARCHAR(), nullable=False),
         sa.Column("type", sa.VARCHAR(), nullable=False),
         sa.Column("platform", sa.VARCHAR(), nullable=False),

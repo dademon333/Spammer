@@ -11,6 +11,7 @@ class MessageORM(Base):
     id = Column(BigInteger, primary_key=True)
     text = Column(Text, nullable=False)
     address = Column(VARCHAR, nullable=False, index=True)
+    subject = Column(VARCHAR, nullable=True)
     status = Column(VARCHAR, nullable=False, index=True, default="new")
     type = Column(VARCHAR, nullable=False)
     platform = Column(VARCHAR, nullable=False)

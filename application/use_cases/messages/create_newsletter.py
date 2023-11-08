@@ -32,6 +32,7 @@ class CreateNewsletterUseCase:
             Message(
                 text=message.text,
                 address=message.address,
+                subject=message.subject,
                 type=MessageType.newsletter,
                 platform=input_dto.platform,
                 access_token=message.access_token,

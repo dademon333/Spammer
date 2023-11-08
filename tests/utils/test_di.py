@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from fastapi import Depends
 
-from application.utils.di import DependencySolver
+from application.utils.di import DependencyInjector
 
 
 def func_without_args_1():
@@ -50,61 +50,61 @@ def func_with_nested_args(
 
 
 async def test_without_args():
-    async with DependencySolver() as solver:
-        result = await solver.solve(func_without_args_1)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(func_without_args_1)
     assert result == 123
 
 
 async def test_with_one_kwarg():
-    async with DependencySolver() as solver:
-        result = await solver.solve(func_with_one_kwarg)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(func_with_one_kwarg)
     assert result == 1000
 
 
 async def test_with_one_dep_arg():
-    async with DependencySolver() as solver:
-        result = await solver.solve(func_with_one_dep_arg)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(func_with_one_dep_arg)
     assert result == 123
 
 
 async def test_async_func_with_one_dep_arg():
-    async with DependencySolver() as solver:
-        result = await solver.solve(async_func_with_one_dep_arg)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(async_func_with_one_dep_arg)
     assert result == 123
 
 
 async def test_func_with_mixed_args():
-    async with DependencySolver() as solver:
-        result = await solver.solve(func_with_mixed_args)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(func_with_mixed_args)
     assert result == [123, 2000]
 
 
 async def test_func_with_two_dep_args():
-    async with DependencySolver() as solver:
-        result = await solver.solve(func_with_two_dep_args)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(func_with_two_dep_args)
     assert result == [123, 456]
 
 
 async def test_func_with_nested_args():
-    async with DependencySolver() as solver:
-        result = await solver.solve(func_with_nested_args)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(func_with_nested_args)
     assert result == [123, 456]
 
 
 async def test_with_cache():
-    async with DependencySolver() as solver:
+    async with DependencyInjector() as injector:
         mock = Mock(side_effect=[1, 2])
-        result_1 = await solver.solve(mock)
-        result_2 = await solver.solve(mock)
+        result_1 = await injector.solve(mock)
+        result_2 = await injector.solve(mock)
     assert result_1 is result_2
     assert mock.call_count == 1
 
 
 async def test_without_cache():
-    async with DependencySolver(use_cache=False) as solver:
+    async with DependencyInjector(use_cache=False) as injector:
         mock = Mock(side_effect=[1, 2])
-        result_1 = await solver.solve(mock)
-        result_2 = await solver.solve(mock)
+        result_1 = await injector.solve(mock)
+        result_2 = await injector.solve(mock)
     assert result_1 == 1
     assert result_2 == 2
     assert mock.call_count == 2
@@ -124,10 +124,10 @@ async def test_cache_with_subdeps():
         bar_calls += 1
         return value + 100
 
-    async with DependencySolver() as solver:
-        await solver.solve(bar)
-        await solver.solve(bar)
-        await solver.solve(foo)
+    async with DependencyInjector() as injector:
+        await injector.solve(bar)
+        await injector.solve(bar)
+        await injector.solve(foo)
 
     assert foo_calls == 1
     assert bar_calls == 1
@@ -141,8 +141,8 @@ async def test_closes_generator_dependencies():
         yield 123
         is_closed = True
 
-    async with DependencySolver() as solver:
-        result = await solver.solve(get_db)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(get_db)
         assert result == 123
         assert not is_closed
 
@@ -157,8 +157,8 @@ async def test_closes_async_generator_dependencies():
         yield 123
         is_closed = True
 
-    async with DependencySolver() as solver:
-        result = await solver.solve(get_db)
+    async with DependencyInjector() as injector:
+        result = await injector.solve(get_db)
         assert result == 123
         assert not is_closed
 
@@ -174,8 +174,8 @@ async def test_closes_dependencies_on_exception():
         is_closed = True
 
     with pytest.raises(ValueError):
-        async with DependencySolver() as solver:
-            await solver.solve(get_db)
+        async with DependencyInjector() as injector:
+            await injector.solve(get_db)
             assert not is_closed
             raise ValueError("Some exception")
 

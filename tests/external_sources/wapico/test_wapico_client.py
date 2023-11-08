@@ -3,7 +3,7 @@ import re
 
 from aioresponses import aioresponses
 
-from application.external_sources.wapico.wapico import WapicoClient
+from application.external_sources.wapico.client import WapicoClient
 
 
 async def test_successful_request(mock_aioresponse: aioresponses):

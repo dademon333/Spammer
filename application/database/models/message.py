@@ -28,6 +28,7 @@ class MessageStatus(StrEnum):
 class Message(ModelBase):
     text: str
     address: str
+    subject: str | None  # Тема сообщения (для email)
     status: MessageStatus = MessageStatus.new
     type: MessageType
     platform: MessagePlatform
@@ -41,6 +42,7 @@ class Message(ModelBase):
 class UpdateMessage(UpdateModelBase):
     text: str | None
     address: str | None
+    subject: str | None
     status: MessageStatus | None
     type: MessageType | None
     platform: MessagePlatform | None
