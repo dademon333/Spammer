@@ -11,6 +11,8 @@ from application.config import (
 
 
 class EmailClient:
+    """https://pypi.org/project/aiosmtplib/"""
+
     @staticmethod
     async def send_message(
         to: str,

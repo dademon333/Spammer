@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class SMSCClient:
+    """https://smsc.ru/api/#menu"""
+
     @staticmethod
     async def send_message(
         phone_number: str, message: str

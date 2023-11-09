@@ -89,12 +89,14 @@ async def whatsapp_message_list() -> list[Message]:
             address="+79061001122",
             type=MessageType.immediate,
             platform=MessagePlatform.whatsapp,
+            access_token="642D8BD6EEA12",  # test wapico instance id
         ),
         Message(
             text="Reminder: Meeting at 2 PM",
             address="+79061001123",
             type=MessageType.immediate,
             platform=MessagePlatform.whatsapp,
+            access_token="642D8BD6EEA12",  # test wapico instance id
         ),
     ]
 
