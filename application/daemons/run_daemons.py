@@ -2,8 +2,10 @@ import asyncio
 import threading
 
 from application.daemons.email import EmailDaemon
+from application.daemons.whatsapp import WhatsappDaemon
 from application.database.models.message import MessageType
 from application.external_sources.email.client import EmailClient
+from application.external_sources.wapico.client import WapicoClient
 
 
 async def main():
@@ -23,6 +25,12 @@ async def main():
                 email_client=EmailClient(), message_type=MessageType.newsletter
             ).run(),
         ),
+        daemon=True,
+    ).start()
+
+    threading.Thread(
+        target=asyncio.run,
+        args=(WhatsappDaemon(whatsapp_client=WapicoClient()).run(),),
         daemon=True,
     ).start()
 

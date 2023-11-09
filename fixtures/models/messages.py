@@ -79,3 +79,29 @@ async def email_mixed_message_list_in_db(
 ) -> list[Message]:
     await message_repository.bulk_create(email_mixed_message_list)
     return email_mixed_message_list
+
+
+@pytest.fixture()
+async def whatsapp_message_list() -> list[Message]:
+    return [
+        Message(
+            text="Hello, dear",
+            address="+79061001122",
+            type=MessageType.immediate,
+            platform=MessagePlatform.whatsapp,
+        ),
+        Message(
+            text="Reminder: Meeting at 2 PM",
+            address="+79061001123",
+            type=MessageType.immediate,
+            platform=MessagePlatform.whatsapp,
+        ),
+    ]
+
+
+@pytest.fixture()
+async def whatsapp_message_list_in_db(
+    whatsapp_message_list: list[Message], message_repository: MessageRepository
+) -> list[Message]:
+    await message_repository.bulk_create(whatsapp_message_list)
+    return whatsapp_message_list

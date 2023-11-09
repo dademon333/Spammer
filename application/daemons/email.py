@@ -31,6 +31,7 @@ class EmailDaemon:
                     continue
 
                 await self.process_messages(messages)
+                logger.info(f"Отправлено {len(messages)} сообщений на почту")
             except Exception:
                 logger.exception(
                     "Произошла ошибка при рассылке сообщений на почту"
@@ -64,15 +65,17 @@ class EmailDaemon:
                 get_message_repository
             )
             await message_repository.update_statuses(
-                message_ids=[x.id for x in messages], status=MessageStatus.done
+                message_ids=[x.id for x in messages],
+                new_status=MessageStatus.done,
             )
 
-    async def on_process_error(self, messages: list[Message]) -> None:
+    @staticmethod
+    async def on_process_error(messages: list[Message]) -> None:
         async with DependencyInjector() as injector:
             message_repository: MessageRepository = await injector.solve(
                 get_message_repository
             )
             await message_repository.update_statuses(
                 message_ids=[x.id for x in messages],
-                status=MessageStatus.failed,
+                new_status=MessageStatus.failed,
             )

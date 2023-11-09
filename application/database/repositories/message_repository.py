@@ -59,11 +59,20 @@ class MessageRepository(BaseDbRepository[Message, UpdateMessage, MessageORM]):
         )
         return [Message.from_orm(x) for x in messages]
 
+    async def update_status(
+        self, message_id: int, new_status: MessageStatus
+    ) -> None:
+        await self.db_session.execute(
+            update(MessageORM)
+            .where(MessageORM.id == message_id)
+            .values(status=new_status.value)
+        )
+
     async def update_statuses(
-        self, message_ids: list[int], status: MessageStatus
+        self, message_ids: list[int], new_status: MessageStatus
     ) -> None:
         await self.db_session.execute(
             update(MessageORM)
             .where(MessageORM.id.in_(message_ids))
-            .values(status=status.value)
+            .values(status=new_status.value)
         )
