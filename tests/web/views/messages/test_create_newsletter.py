@@ -1,9 +1,9 @@
 from httpx import AsyncClient
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from application.database.models.message import MessagePlatform
-from application.database.repositories.message_repository import (
-    MessageRepository,
-)
+from application.database.orm_models import MessageORM
 from application.use_cases.messages.dto import (
     CreateNewsletterInputDTO,
     CreateNewsletterMessageInputDTO,
@@ -13,7 +13,7 @@ from application.web.views.common_responses import OkResponse
 
 async def test_success(
     auth_token: str,
-    message_repository: MessageRepository,
+    db_session: AsyncSession,
     async_client: AsyncClient,
 ):
     input_dto = CreateNewsletterInputDTO(
@@ -34,7 +34,7 @@ async def test_success(
     )
     result = response.json()
 
-    messages_in_db = await message_repository.get_by_ids([1, 2, 3, 4, 5])
+    messages_in_db = (await db_session.scalars(select(MessageORM))).all()
 
     assert response.status_code == 200
     assert result == OkResponse()

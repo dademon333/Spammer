@@ -7,6 +7,7 @@ from application.database.models.message import (
     UpdateMessage,
     MessageType,
     MessageStatus,
+    MessagePlatform,
 )
 from application.database.orm_models import MessageORM
 from application.database.repositories.base_repository import BaseDbRepository
@@ -17,7 +18,10 @@ class MessageRepository(BaseDbRepository[Message, UpdateMessage, MessageORM]):
     _model = Message
 
     async def take_to_work(
-        self, type_: MessageType, count: int
+        self,
+        message_type: MessageType,
+        platform: MessagePlatform,
+        count: int,
     ) -> list[Message]:
         # Если сообщение в работе уже 15 минут, скорее всего, что-то наебнулось
         # Попробуем отправить еще раз
@@ -26,7 +30,8 @@ class MessageRepository(BaseDbRepository[Message, UpdateMessage, MessageORM]):
             select(MessageORM)
             .where(
                 and_(
-                    MessageORM.type == type_,
+                    MessageORM.type == message_type,
+                    MessageORM.platform == platform,
                     or_(
                         MessageORM.status == MessageStatus.new.value,
                         and_(
@@ -38,7 +43,7 @@ class MessageRepository(BaseDbRepository[Message, UpdateMessage, MessageORM]):
             )
             .order_by(self._table.id)
             .limit(count)
-            .for_update(skip_locked=True)
+            .with_for_update(skip_locked=True)
         )
         messages = rows.all()
         if not messages:
@@ -53,3 +58,12 @@ class MessageRepository(BaseDbRepository[Message, UpdateMessage, MessageORM]):
             .where(MessageORM.id.in_([x.id for x in messages]))
         )
         return [Message.from_orm(x) for x in messages]
+
+    async def update_statuses(
+        self, message_ids: list[int], status: MessageStatus
+    ) -> None:
+        await self.db_session.execute(
+            update(MessageORM)
+            .where(MessageORM.id.in_(message_ids))
+            .values(status=status.value)
+        )
