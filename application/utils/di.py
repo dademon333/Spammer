@@ -26,7 +26,11 @@ class DependencyInjector[T]:
     # commits and closes db connection/etc
     some_next_login()
     ```
-    AsyncExitStack is used for graceful shutdown of yield-dependencies
+    `DependencyInjector.solve` adds a dependency to AsyncExitStack
+    (inside FastAPI's `solve_dependencies`), then
+    `DependencyInjector.__aexit__` calls `AsyncExitStack.aclose`,
+    which gracefully shuts down yield-dependencies
+    via `__anext__` (e.g. db transactions, connections).
     """
 
     def __init__(self, use_cache: bool = True):
