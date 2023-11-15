@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import NoReturn
 
 from application.database.models.message import (
     MessageType,
@@ -22,7 +23,7 @@ class EmailDaemon:
         self.email_client = email_client
         self.message_type = message_type
 
-    async def run(self):
+    async def run(self) -> NoReturn:
         while True:
             try:
                 messages = await self.get_messages()
