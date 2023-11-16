@@ -1,5 +1,5 @@
 from contextlib import AsyncExitStack
-from typing import Any, Callable
+from typing import Any, Callable, Awaitable
 
 from fastapi import Request
 from fastapi.dependencies.utils import (
@@ -44,7 +44,9 @@ class DependencyInjector[T]:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.exit_stack.aclose()
 
-    async def solve(self, get_dependency: Callable[..., T]) -> T:
+    async def solve(
+        self, get_dependency: Callable[..., T | Awaitable[T]]
+    ) -> T:
         if self.use_cache:
             cache_key = (get_dependency, ())
             if cache_key in self.cache:
