@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 
-from application.config import IS_DEBUG, POSTGRESQL_URL
+from application.config import POSTGRESQL_URL
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def create_connection(connection_url: str) -> AsyncEngine:
 
     return create_async_engine(
         connection_url,
-        echo=IS_DEBUG,
+        echo=False,
         connect_args={
             "statement_cache_size": 0,
             "prepared_statement_cache_size": 0,

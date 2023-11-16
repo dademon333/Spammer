@@ -1,5 +1,4 @@
 import asyncio
-import threading
 
 from application.daemons.email import EmailDaemon
 from application.daemons.sms import SMSDaemon
@@ -11,37 +10,22 @@ from application.external_sources.wapico.client import WapicoClient
 
 
 async def main():
-    threading.Thread(
-        target=asyncio.run,
-        args=(
+    tasks = (  # noqa
+        asyncio.create_task(
             EmailDaemon(
                 email_client=EmailClient(), message_type=MessageType.immediate
-            ).run(),
+            ).run()
         ),
-        daemon=True,
-    ).start()
-    threading.Thread(
-        target=asyncio.run,
-        args=(
+        asyncio.create_task(
             EmailDaemon(
                 email_client=EmailClient(), message_type=MessageType.newsletter
-            ).run(),
+            ).run()
         ),
-        daemon=True,
-    ).start()
-
-    threading.Thread(
-        target=asyncio.run,
-        args=(WhatsappDaemon(whatsapp_client=WapicoClient()).run(),),
-        daemon=True,
-    ).start()
-
-    threading.Thread(
-        target=asyncio.run,
-        args=(SMSDaemon(smsc_client=SMSCClient()).run(),),
-        daemon=True,
-    ).start()
-
+        asyncio.create_task(
+            WhatsappDaemon(whatsapp_client=WapicoClient()).run()
+        ),
+        asyncio.create_task(SMSDaemon(smsc_client=SMSCClient()).run()),
+    )
     await asyncio.Event().wait()
 
 

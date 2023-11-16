@@ -7,7 +7,6 @@ services:
     tty: true
     build:
       context: .
-    container_name: app
     environment:
       SQLALCHEMY_WARN_20: 1
       PYTHONUNBUFFERED: 1
@@ -16,16 +15,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    command: ["./start_api.sh"]
 
   postgres:
     image: postgres:14.6-alpine
     restart: on-failure
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      POSTGRES_DB: spammer
-      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: spammer
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

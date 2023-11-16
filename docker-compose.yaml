@@ -1,0 +1,82 @@
+volumes:
+    postgres_data:
+
+
+services:
+  app:
+    tty: true
+    build:
+      context: .
+    environment:
+      POSTGRESQL_USER: $POSTGRESQL_USER
+      POSTGRESQL_HOST: $POSTGRESQL_HOST
+      POSTGRESQL_PORT: $POSTGRESQL_PORT
+      POSTGRESQL_PASSWORD: $POSTGRESQL_PASSWORD
+      POSTGRESQL_DATABASE: $POSTGRESQL_DATABASE
+
+      SMSC_LOGIN: $SMSC_LOGIN
+      SMSC_PASSWORD: $SMSC_PASSWORD
+
+      WAPICO_ACCESS_TOKEN: $WAPICO_ACCESS_TOKEN
+
+      EMAIL_ADDRESS: $EMAIL_ADDRESS
+      EMAIL_PASSWORD: $EMAIL_PASSWORD
+      EMAIL_SERVER_URL: $EMAIL_SERVER_URL
+      EMAIL_SERVER_PORT: $EMAIL_SERVER_PORT
+
+      IS_DEBUG: "False"
+      SQLALCHEMY_WARN_20: 1
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "80:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["./start_api.sh"]
+
+  daemons:
+    build:
+      context: .
+    environment:
+      POSTGRESQL_USER: $POSTGRESQL_USER
+      POSTGRESQL_HOST: $POSTGRESQL_HOST
+      POSTGRESQL_PORT: $POSTGRESQL_PORT
+      POSTGRESQL_PASSWORD: $POSTGRESQL_PASSWORD
+      POSTGRESQL_DATABASE: $POSTGRESQL_DATABASE
+
+      SMSC_LOGIN: $SMSC_LOGIN
+      SMSC_PASSWORD: $SMSC_PASSWORD
+
+      WAPICO_ACCESS_TOKEN: $WAPICO_ACCESS_TOKEN
+
+      EMAIL_ADDRESS: $EMAIL_ADDRESS
+      EMAIL_PASSWORD: $EMAIL_PASSWORD
+      EMAIL_SERVER_URL: $EMAIL_SERVER_URL
+      EMAIL_SERVER_PORT: $EMAIL_SERVER_PORT
+
+      IS_DEBUG: "False"
+      SQLALCHEMY_WARN_20: 1
+      PYTHONUNBUFFERED: 1
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: [ "./start_daemons.sh" ]
+
+  postgres:
+      image: postgres:14.6-alpine
+      restart: on-failure
+      environment:
+          POSTGRES_USER: $POSTGRESQL_USER
+          POSTGRES_HOST: $POSTGRESQL_HOST
+          POSTGRES_PORT: $POSTGRESQL_PORT
+          POSTGRES_PASSWORD: $POSTGRESQL_PASSWORD
+          POSTGRES_DB: $POSTGRESQL_DATABASE
+      volumes:
+          - postgres_data:/var/lib/postgresql/data
+      ports:
+          - "127.0.0.1:5432:5432"
+      healthcheck:
+          test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+          interval: 10s
+          timeout: 5s
+          retries: 5

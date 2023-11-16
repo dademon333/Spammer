@@ -1,0 +1,1 @@
+python3 application.daemons.run_daemons
