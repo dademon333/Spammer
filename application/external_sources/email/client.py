@@ -7,6 +7,7 @@ from application.config import (
     EMAIL_ADDRESS,
     EMAIL_SERVER_URL,
     EMAIL_SERVER_PORT,
+    EMAIL_PASSWORD,
 )
 
 
@@ -25,5 +26,9 @@ class EmailClient:
         msg["Subject"] = subject
         msg.set_content(MIMEText(message).as_string())
         await aiosmtplib.send(
-            msg, hostname=EMAIL_SERVER_URL, port=EMAIL_SERVER_PORT
+            msg,
+            hostname=EMAIL_SERVER_URL,
+            port=EMAIL_SERVER_PORT,
+            username=EMAIL_ADDRESS,
+            password=EMAIL_PASSWORD,
         )

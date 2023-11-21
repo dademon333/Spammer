@@ -1,1 +1,3 @@
-python3 application.daemons.run_daemons
+#!/usr/bin/env bash
+
+python3 -m application.daemons.run_daemons
