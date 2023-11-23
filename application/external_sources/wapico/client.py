@@ -16,7 +16,7 @@ class WapicoClient:
         phone_number: str, message: str, instance_id: str
     ) -> dict | None:
         url = (
-            "https://biz.wapico.ru/api/task_add.php?"
+            "https://api.dumalinc.ru/api/send.php?"
             f"access_token={WAPICO_ACCESS_TOKEN}"
             f"&number={phone_number}"
             f"&type=text"

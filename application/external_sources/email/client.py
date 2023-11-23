@@ -1,5 +1,5 @@
 from email.message import EmailMessage
-from email.mime.text import MIMEText
+from email.utils import formataddr
 
 import aiosmtplib
 
@@ -21,14 +21,16 @@ class EmailClient:
         message: str,
     ):
         msg = EmailMessage()
-        msg["From"] = EMAIL_ADDRESS
+        msg["From"] = formataddr(("Service Name", EMAIL_ADDRESS))
         msg["To"] = to
         msg["Subject"] = subject
-        msg.set_content(MIMEText(message).as_string())
+        msg.set_content(message)
         await aiosmtplib.send(
             msg,
             hostname=EMAIL_SERVER_URL,
             port=EMAIL_SERVER_PORT,
             username=EMAIL_ADDRESS,
             password=EMAIL_PASSWORD,
+            use_tls=True,
+            timeout=15,
         )
